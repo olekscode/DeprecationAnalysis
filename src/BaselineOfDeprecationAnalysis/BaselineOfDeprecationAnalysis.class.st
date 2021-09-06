@@ -13,8 +13,12 @@ BaselineOfDeprecationAnalysis >> baseline: spec [
 			baseline: 'Clio'
 			with: [ spec repository: 'github://olekscode/Clio/src' ].
 			
+		spec
+			baseline: 'ManualClassifier'
+			with: [ spec repository: 'github://olekscode/ManualClassifier/src' ].
+			
 		"Packages"
 		spec 
-			package: 'DeprecationAnalysis' with: [ spec requires: #(Clio) ];
+			package: 'DeprecationAnalysis' with: [ spec requires: #(Clio ManualClassifier) ];
 			package: 'DeprecationAnalysis-Tests' with: [ spec requires: #(DeprecationAnalysis) ] ]
 ]
