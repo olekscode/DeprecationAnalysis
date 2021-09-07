@@ -1,5 +1,5 @@
 Class {
-	#name : #DeprecationAnalysis,
+	#name : #DaDeprecationAnalysis,
 	#superclass : #Object,
 	#instVars : [
 		'repositoryOwner',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-DeprecationAnalysis >> classifyDeprecationsByRules [
+DaDeprecationAnalysis >> classifyDeprecatedMethodsByRules [
 
 	| classification |
 	
@@ -25,7 +25,7 @@ DeprecationAnalysis >> classifyDeprecationsByRules [
 ]
 
 { #category : #'as yet unclassified' }
-DeprecationAnalysis >> classifyDeprecationsBySelectors [
+DaDeprecationAnalysis >> classifyDeprecatedMethodsBySelectors [
 
 	| selectors classification |
 	
@@ -46,7 +46,15 @@ DeprecationAnalysis >> classifyDeprecationsBySelectors [
 ]
 
 { #category : #'as yet unclassified' }
-DeprecationAnalysis >> deprecatedMethods [
+DaDeprecationAnalysis >> classifyDeprecationsByScenarios [
+
+	| classification |
+	classification := DeprecationCategory new.
+	^ classification accept: self deprecations.
+]
+
+{ #category : #'as yet unclassified' }
+DaDeprecationAnalysis >> deprecatedMethods [
 
 	deprecatedMethods ifNil: [ 
 		self extractDeprecatedMethods ].
@@ -54,8 +62,14 @@ DeprecationAnalysis >> deprecatedMethods [
 	^ deprecatedMethods
 ]
 
+{ #category : #accessing }
+DaDeprecationAnalysis >> deprecations [
+
+	^ self deprecatedMethods collect: [ :each | each asDaDeprecation ].
+]
+
 { #category : #'as yet unclassified' }
-DeprecationAnalysis >> extractDeprecatedMethods [
+DaDeprecationAnalysis >> extractDeprecatedMethods [
 
 	| collector packages methods |
 
@@ -75,27 +89,46 @@ DeprecationAnalysis >> extractDeprecatedMethods [
 	deprecatedMethods := methods select: [ :each | each isDeprecated ].
 ]
 
+{ #category : #'as yet unclassified' }
+DaDeprecationAnalysis >> invalidRewritingDeprecations [
+
+	^ self rewritingDeprecations reject: [ :each | each transformationRule isValid ]
+]
+
+{ #category : #'as yet unclassified' }
+DaDeprecationAnalysis >> nonRewritingDeprecations [
+	"Deprecations that do not contain a transformation rule"
+	
+	^ self deprecations reject: [ :each | each isTransforming ]
+]
+
 { #category : #accessing }
-DeprecationAnalysis >> repositoryName: anObject [
+DaDeprecationAnalysis >> repositoryName: anObject [
 
 	repositoryName := anObject
 ]
 
 { #category : #accessing }
-DeprecationAnalysis >> repositoryOwner: anObject [
+DaDeprecationAnalysis >> repositoryOwner: anObject [
 
 	repositoryOwner := anObject
 ]
 
 { #category : #'as yet unclassified' }
-DeprecationAnalysis >> rewritingDeprecations [
+DaDeprecationAnalysis >> rewritingDeprecations [
 	"Deprecations that contain a transformation rule and can rewrite client senders"
 	
-	^ self deprecatedMethods select: [ :each | each isTransforming ]
+	^ self deprecations select: [ :each | each isTransforming ]
+]
+
+{ #category : #'as yet unclassified' }
+DaDeprecationAnalysis >> validRewritingDeprecations [
+
+	^ self rewritingDeprecations select: [ :each | each transformationRule isValid ]
 ]
 
 { #category : #accessing }
-DeprecationAnalysis >> version: anObject [
+DaDeprecationAnalysis >> version: anObject [
 
 	version := anObject
 ]

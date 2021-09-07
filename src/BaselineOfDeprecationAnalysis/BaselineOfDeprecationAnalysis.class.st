@@ -20,5 +20,6 @@ BaselineOfDeprecationAnalysis >> baseline: spec [
 		"Packages"
 		spec 
 			package: 'DeprecationAnalysis' with: [ spec requires: #(Clio ManualClassifier) ];
-			package: 'DeprecationAnalysis-Tests' with: [ spec requires: #(DeprecationAnalysis) ] ]
+			package: 'DeprecationAnalysis-Classification' with: [ spec requires: #(#DaDeprecationAnalysis) ];
+			package: 'DeprecationAnalysis-Tests' with: [ spec requires: #(#DaDeprecationAnalysis) ] ]
 ]
