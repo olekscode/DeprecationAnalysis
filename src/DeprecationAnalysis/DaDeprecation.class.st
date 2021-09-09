@@ -2,8 +2,11 @@ Class {
 	#name : #DaDeprecation,
 	#superclass : #DeprecationModel,
 	#instVars : [
+		'packageName',
 		'className',
-		'selector'
+		'selector',
+		'author',
+		'commitId'
 	],
 	#category : #DeprecationAnalysis
 }
@@ -37,11 +40,26 @@ DaDeprecation >> asTsvRow [
 
 	^ String streamContents: [ :stream |
 		stream
+			nextPutAll: packageName; tab;
 			nextPutAll: className; tab;
 			nextPutAll: selector; tab;
+			nextPutAll: (author ifNil: [ '' ]); tab;
+			nextPutAll: (commitId ifNil: [ '' ]); tab;
 			nextPutAll: msg; tab;
 			nextPutAll: antecedent; tab;
 			nextPutAll: consequent ].
+]
+
+{ #category : #accessing }
+DaDeprecation >> author [
+
+	^ author
+]
+
+{ #category : #accessing }
+DaDeprecation >> author: anObject [
+
+	author := anObject
 ]
 
 { #category : #accessing }
@@ -56,10 +74,34 @@ DaDeprecation >> className: anObject [
 	className := anObject
 ]
 
+{ #category : #accessing }
+DaDeprecation >> commitId [
+
+	^ commitId
+]
+
+{ #category : #accessing }
+DaDeprecation >> commitId: anObject [
+
+	commitId := anObject
+]
+
 { #category : #comparing }
 DaDeprecation >> hash [
 
 	^ super hash bitXor: (className hash bitXor: selector hash)
+]
+
+{ #category : #accessing }
+DaDeprecation >> packageName [
+
+	^ packageName
+]
+
+{ #category : #accessing }
+DaDeprecation >> packageName: anObject [
+
+	packageName := anObject
 ]
 
 { #category : #'as yet unclassified' }
